@@ -42,6 +42,10 @@ class BobBot(override val bus: MessageEventBus) extends AbstractBot {
         publish(OutboundMessage(message.channel, s"$name added"))
       }
 
+    case Command("poll", _, message) =>
+      val poll = s"""'점심 어디서?' ${Random.shuffle(restaurants).take(4).map(_.name.replaceAll(" ", "")).mkString("'","' '","'")}"""
+      HttpUtil.callSlackPollApp(poll, message.channel)
+
     case BaseMessage(text, channel, user, _, _) =>
       BotInfoKeeper.current match {
         case Some(bi) if text.matches("(.*)(먹자)($|(\\s+.*))") && (text.contains(bi.id) || text.contains(bi.name)) && user != bi.id =>
