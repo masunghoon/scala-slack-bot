@@ -12,7 +12,7 @@ import scala.util.Random
 case class Restaurant(name: String)
 
 /**
-  * Maintainer: Mario
+  * Maintainer: Sunghoon
   */
 class BobBot(override val bus: MessageEventBus) extends AbstractBot {
   val file = new File("src/main/resources/restaurants.csv")
@@ -43,8 +43,8 @@ class BobBot(override val bus: MessageEventBus) extends AbstractBot {
       }
 
     case Command("poll", _, message) =>
-      val poll = s"""'점심 어디서?' ${Random.shuffle(restaurants).take(4).map(_.name.replaceAll(" ", "")).mkString("'","' '","'")}"""
-      HttpUtil.callSlackPollApp(poll, message.channel)
+      val pollMsg = s"""'점심 어디서?' ${Random.shuffle(restaurants).take(4).map(_.name.replaceAll(" ", "")).mkString("'","' '","'")}"""
+      PollApp.call(pollMsg, message.channel)
 
     case BaseMessage(text, channel, user, _, _) =>
       BotInfoKeeper.current match {
